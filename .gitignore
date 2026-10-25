@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.env
+.venv/
+venv/
+.Python
+pip-wheel-metadata/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+server/instance/
+server/app.db
+server/migrations/versions/*.pyc
