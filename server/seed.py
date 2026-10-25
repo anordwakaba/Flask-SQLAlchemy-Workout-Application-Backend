@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 from datetime import date
 
 from app import app
@@ -6,32 +6,74 @@ from models import db, Exercise, Workout, WorkoutExercise
 
 
 with app.app_context():
-    # Clear existing records so running this file repeatedly won't duplicate data.
-    db.drop_all()
+    # Create any tables that do not exist yet.
     db.create_all()
 
-    strength = Exercise(name="Squat", category="Strength", equipment_needed=False)
-    cardio = Exercise(name="Jump Rope", category="Cardio", equipment_needed=True)
-    core = Exercise(name="Plank", category="Core", equipment_needed=False)
+    # Add a few sample exercises.
+    squat = Exercise(
+        name="Squat",
+        category="Strength",
+        equipment_needed=False
+    )
 
-    workout_one = Workout(
+    jump_rope = Exercise(
+        name="Jump Rope",
+        category="Cardio",
+        equipment_needed=True
+    )
+
+    plank = Exercise(
+        name="Plank",
+        category="Core",
+        equipment_needed=False
+    )
+
+    # Add two sample workout sessions.
+    strength_workout = Workout(
         date=date(2026, 10, 25),
         duration_minutes=45,
-        notes="Full body strength session",
+        notes="A full-body strength session"
     )
-    workout_two = Workout(
+
+    cardio_workout = Workout(
         date=date(2026, 10, 24),
         duration_minutes=30,
-        notes="Cardio and core",
+        notes="A cardio and core session"
     )
 
-    db.session.add_all([strength, cardio, core, workout_one, workout_two])
+    db.session.add_all([
+        squat,
+        jump_rope,
+        plank,
+        strength_workout,
+        cardio_workout
+    ])
+
+    # Save these records first so the database assigns their IDs.
     db.session.flush()
 
+    # Connect exercises to the workouts and record the training details.
     db.session.add_all([
-        WorkoutExercise(workout=workout_one, exercise=strength, reps=12, sets=3),
-        WorkoutExercise(workout=workout_one, exercise=core, duration_seconds=45, sets=3),
-        WorkoutExercise(workout=workout_two, exercise=cardio, duration_seconds=60, sets=5),
+        WorkoutExercise(
+            workout=strength_workout,
+            exercise=squat,
+            reps=12,
+            sets=3
+        ),
+        WorkoutExercise(
+            workout=strength_workout,
+            exercise=plank,
+            duration_seconds=45,
+            sets=3
+        ),
+        WorkoutExercise(
+            workout=cardio_workout,
+            exercise=jump_rope,
+            duration_seconds=60,
+            sets=5
+        )
     ])
+
     db.session.commit()
-    print("Database seeded successfully.")
+
+    print("Sample workouts and exercises have been added successfully.")
