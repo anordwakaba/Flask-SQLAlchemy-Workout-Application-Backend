@@ -190,8 +190,10 @@ class WorkoutExercise(db.Model):
             or isinstance(value, bool)
             or value < 0
         ):
+            
             raise ValueError(
                 "Duration must be a non-negative number of seconds."
             )
+
 
         return value
